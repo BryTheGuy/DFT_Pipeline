@@ -25,20 +25,15 @@ public class NameConverter {
         Name_of_Molecule = molName;
     }
 
-    /**
-     *
-     */
     public String toCml(String molName) {
         NameToStructure nts = NameToStructure.getInstance();
-        NameToStructureConfig ntsConfig = new NameToStructureConfig(); // TODO: Figure out configs
+        NameToStructureConfig ntsConfig = new NameToStructureConfig();
         //a new NameToStructureConfig starts as a copy of OPSIN default configuration
-        ntsConfig.setDetailedFailureAnalysis(true);
-        /*
-        Config settings might add need to check
         ntsConfig.setAllowRadicals(true);
+        ntsConfig.setDetailedFailureAnalysis(true);
         ntsConfig.setInterpretAcidsWithoutTheWordAcid(true);
         ntsConfig.setWarnRatherThanFailOnUninterpretableStereochemistry(true);
-        */
+
         try {   // TODO: Add better error catching to chemical name parsing
             OpsinResult result = nts.parseChemicalName(molName, ntsConfig);
             return result.getCml(); // TODO: What if parser returns "null"?
@@ -61,25 +56,4 @@ public class NameConverter {
         }
     }
 
-    public void genGaussianFiles() throws FileNotFoundException {
-        try (PrintWriter pw = new PrintWriter("tempFileName.inp")) {
-            try (InputStream in = getClass().getResourceAsStream("/gaussian_input_opt.txt")) {
-                try {
-                    assert in != null;
-                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
-                        reader.skip(52);
-                        String line = reader.readLine();
-                        while (line != null) {
-                            pw.println(line);
-                            line = reader.readLine();
-                        }
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } // TODO: Name this better
-    }
 }

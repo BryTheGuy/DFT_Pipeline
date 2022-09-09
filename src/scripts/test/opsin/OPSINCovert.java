@@ -4,7 +4,7 @@ import uk.ac.cam.ch.wwmm.opsin.NameToStructure;
 import uk.ac.cam.ch.wwmm.opsin.NameToStructureConfig;
 import uk.ac.cam.ch.wwmm.opsin.OpsinResult;
 
-public class OPCovert {
+public class OPSINCovert {
     NameToStructure nts = NameToStructure.getInstance();
     NameToStructureConfig ntsConfig = new NameToStructureConfig();
     public void nameToCML() {
@@ -20,7 +20,7 @@ public class OPCovert {
         System.out.println(cml);
     }
 
-    public OPCovert()
+    public OPSINCovert()
     {
         ntsConfig.setDetailedFailureAnalysis(true);
         ntsConfig.isDetailedFailureAnalysis();
@@ -32,7 +32,7 @@ public class OPCovert {
     public static void main(String[] args) {
         System.out.println("Running scripts.test.opsin.OPConvert...");
 
-        OPCovert test = new OPCovert();
+        OPSINCovert test = new OPSINCovert();
 
         test.nameToCML();
     }
