@@ -1,11 +1,10 @@
 import edu.uoregon.hms.FileInterpreter;
 import edu.uoregon.hms.Locator;
 import edu.uoregon.hms.Settings;
+import org.jetbrains.annotations.NotNull;
 
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello world!");
-        setup();
+    public static void main(String @NotNull [] args) {
         System.out.println("Main running...");
         // Looping through arg inputs looking for -f keyword for the file name
         for (int i = 0; i < args.length; i++) {
@@ -19,6 +18,7 @@ public class Main {
                 System.out.println("Version @version");
             }
         }
+        setup();
         FileInterpreter.readToList();
         FileInterpreter.checkLines();
         FileInterpreter.checker();
