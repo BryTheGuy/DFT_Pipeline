@@ -1,10 +1,10 @@
 package edu.uoregon.hms;
 
-// Open babel
-
+// Open babel https://openbabel.org/api/2.3/
 import org.openbabel.OBBuilder;
 import org.openbabel.OBConversion;
 import org.openbabel.OBMol;
+// opsin https://www.javadoc.io/doc/uk.ac.cam.ch.opsin/opsin-core/latest/uk/ac/cam/ch/wwmm/opsin/package-summary.html
 import uk.ac.cam.ch.wwmm.opsin.NameToStructure;
 import uk.ac.cam.ch.wwmm.opsin.NameToStructureConfig;
 import uk.ac.cam.ch.wwmm.opsin.OpsinResult;
@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
  * @since       0.3          (the version of the package this class was first added to)
  */
 public class StructureConverter {
-    String cml; // this could get very big. TODO: find better solution
+    String cml;
     String Name_of_Molecule;
 
     public StructureConverter(String molName) {
@@ -82,56 +82,4 @@ public class StructureConverter {
             }
         } // TODO: Name this better
     }
-
-/*
-broken readFile()
-    public static String readFile() {
-        try {
-            File molNames = new File("C:\\Users\\bryce\\Documents\\Hendon_Lab\\GCMS_Redox\\GC-MS_to_DFT\\MoleculeNameList.txt");
-            Scanner myReader = new Scanner(molNames);
-            while (myReader.hasNextLine()) {
-                String line = myReader.nextLine();
-                String molLine = myReader.nextLine();
-                if (line == "*C:\\Database\\*") {
-                    if (molLine.indexOf(" (CAS) ") != -1) {
-
-                    }
-                }
-
-                return null;
-            }
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
-*/
-
-/*
-unused parse()
-    public static void findMolecule() {
-        String molName;
-        try {
-            File molNames = new File("C:\\Users\\bryce\\Documents\\Hendon_Lab\\GCMS_Redox\\GC-MS_to_DFT\\MoleculeNameList.txt");
-            Scanner myReader = new Scanner(molNames);
-            while (myReader.hasNextLine()) {
-                String line = myReader.nextLine();
-                if (line.length() == 74) {
-                    line = line.trim();
-                    line = line.toLowerCase();
-                    if (line.contains(" (cas)")) {
-                        int endCAS = line.indexOf(" (cas)");
-                        molName = line.substring(0, endCAS);
-                    } else if (line.contains(" $$")) {
-                        int end$$ = line.indexOf(" $$");
-                        molName = line.substring(0, end$$);
-                    }
-                }
-            }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-*/
 }
