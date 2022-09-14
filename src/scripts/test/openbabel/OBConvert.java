@@ -13,7 +13,7 @@ public class OBConvert {
 
     public void run()
     {
-        run("c1ccccc1");
+        run("CN1C=NC2=C1C(=O)N(C(=O)N2C)C"); // Caffeine
     }
 
     public void run(String smi)

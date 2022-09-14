@@ -97,7 +97,7 @@ public class FileInterpreter {
                 if (lengthFirstLine < Settings.getLineLengthOfInterest() /* 73 */) { //has already been passes through once
                     return firstLine.concat(secondLine.stripLeading());
                 }
-                // FIXME when firstLine has already been combined and is short due to s
+                // FIXME when firstLine has already been combined and is short due to sh
                 return firstLine.substring(Settings.getWhiteTillText(), Settings.getTextBlockEnds()).concat(secondLine.stripLeading()).stripLeading();
                 // Case (1.b) name takes up three lines
             }
