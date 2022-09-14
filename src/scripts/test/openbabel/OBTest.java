@@ -14,7 +14,7 @@ public class OBTest {
    OBMol mol = new OBMol();
 
    c.SetInFormat("smi");
-   c.ReadString(mol, "c1ccccc1");
+   c.ReadString(mol, "CN1C=NC2=C1C(=O)N(C(=O)N2C)C");
 
    System.out.println("Benzene has " + mol.NumAtoms() + " atoms.");
  }
