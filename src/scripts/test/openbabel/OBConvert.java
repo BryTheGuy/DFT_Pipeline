@@ -8,25 +8,30 @@ public class OBConvert {
 
     public OBConvert()
     {
+//        System.setProperty("BABEL_DATADIR", "C:\\Users\\bryce\\AppData\\Roaming\\OpenBabel-3.1.1\\data");
         System.loadLibrary("openbabel_java");
     }
 
     public void run()
     {
-        run("CN1C=NC2=C1C(=O)N(C(=O)N2C)C"); // Caffeine
+        run("CC#CC=O");
     }
 
     public void run(String smi)
     {
-        OBConversion conv = new OBConversion();
-        OBMol mol = new OBMol();
-        OBBuilder builder = new OBBuilder();
-        if (conv.SetInAndOutFormats("smi", "xyz")) {
-            conv.ReadString(mol, smi);
-            mol.AddHydrogens();
-            builder.Build(mol);
-            mol.Center();
-            System.out.println(conv.WriteString(mol));
+        try {
+            OBConversion conv = new OBConversion();
+            OBMol mol = new OBMol();
+            OBBuilder builder = new OBBuilder();
+            if (conv.SetInAndOutFormats("smi", "xyz")) {
+                conv.ReadString(mol, smi);
+                mol.AddHydrogens();
+                builder.Build(mol);
+                mol.Center();
+                System.out.println(conv.WriteString(mol));
+            }
+        } catch (Exception e) {
+            System.err.println("Exception caught => " + e);
         }
     }
 
