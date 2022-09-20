@@ -36,7 +36,7 @@ public class Locator {
      * @return absolute file path
      */
     public static @NotNull String getFilePath() {
-        return getFilePath("src/resources/hendon_fresh_1.txt");
+        return getFilePath("hendon_fresh_1.txt");
     }
 
     /**

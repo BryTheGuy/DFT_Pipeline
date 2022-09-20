@@ -6,6 +6,10 @@ import uk.ac.cam.ch.wwmm.opsin.NameToStructure;
 import uk.ac.cam.ch.wwmm.opsin.NameToStructureConfig;
 import uk.ac.cam.ch.wwmm.opsin.OpsinResult;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
 /**
  * @author      Brycen Falzone <brycenf@uoregon.edu>
  * @version     0.3                (current version number of program)
@@ -13,6 +17,7 @@ import uk.ac.cam.ch.wwmm.opsin.OpsinResult;
  */
 public class NameConverter {
     static NameToStructureConfig ntsConfig = new NameToStructureConfig();
+    static ArrayList<String> failedNames = new ArrayList<>();
 
 
     public static String toCml(String molName) {
@@ -31,13 +36,23 @@ public class NameConverter {
     public static String nameToCML(String moleculeName) {
         NameToStructure nts = NameToStructure.getInstance();
         OpsinResult result = nts.parseChemicalName(moleculeName, ntsConfig);
-        return result.getPrettyPrintedCml();
+        String output = result.getPrettyPrintedCml();
+        if (output == null) {
+            failedNames.add(moleculeName);
+//            System.out.println(moleculeName);
+        }
+        return output;
     }
 
     public static String nameToSmi(String moleculeName) {
         NameToStructure nts = NameToStructure.getInstance();
         OpsinResult result = nts.parseChemicalName(moleculeName, ntsConfig);
-        return result.getSmiles();
+        String output = result.getSmiles();
+        if (output == null) {
+            failedNames.add(moleculeName);
+//            System.out.println(moleculeName);
+        }
+        return output;
     }
 
     public NameConverter()

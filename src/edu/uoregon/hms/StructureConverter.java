@@ -7,8 +7,12 @@ import org.openbabel.OBConversion;
 import org.openbabel.OBMol;
 
 public class StructureConverter {
+    public StructureConverter()
+    {
+        System.loadLibrary("openbabel_java");
+    }
 
-    public static OBMol fromCmlToMol(@NotNull String cml) {
+    public OBMol fromCmlToMol(@NotNull String cml) {
         OBConversion conv = new OBConversion();
         OBMol mol = new OBMol();
         OBBuilder builder = new OBBuilder();
@@ -21,7 +25,7 @@ public class StructureConverter {
         return null;
     }
 
-    public static OBMol fromSmilesToMol(@NotNull String smi) {
+    public OBMol fromSmilesToMol(@NotNull String smi) {
         OBConversion conv = new OBConversion();
         OBMol mol = new OBMol();
         OBBuilder builder = new OBBuilder();
@@ -35,7 +39,7 @@ public class StructureConverter {
         return null;
     }
 
-    public static @Nullable String fromSmilesToFormat(@NotNull String smi, @NotNull String outFormat) {
+    public @Nullable String fromSmilesToFormat(@NotNull String smi, @NotNull String outFormat) {
         OBConversion conv = new OBConversion();
         OBMol mol = new OBMol();
         OBBuilder builder = new OBBuilder();
@@ -49,17 +53,33 @@ public class StructureConverter {
         return null;
     }
 
-    public static @Nullable String fromCmlToFormat(@NotNull String cml, @NotNull String outFormat) {
+    public  @Nullable String fromCmlToFormat(@NotNull String cml, @NotNull String outFormat) {
         OBConversion conv = new OBConversion();
         OBMol mol = new OBMol();
         OBBuilder builder = new OBBuilder();
         if (conv.SetInAndOutFormats("cml", outFormat)) {
             conv.ReadString(mol, cml);
             mol.AddHydrogens();
-            builder.Build(mol);
-            mol.Center();
+            // builder.Build(mol);
+            // mol.Center();
             return conv.WriteString(mol);
         }
         return null;
+    }
+
+    public String fromMolToFormat(OBMol mol, @NotNull String outFormat) {
+        OBConversion conv = new OBConversion();
+//        OBBuilder builder = new OBBuilder();
+//        builder.Build(mol);
+        conv.SetOutFormat(outFormat);
+        return conv.WriteString(mol);
+    }
+
+    public OBMol fromFormatToMol(String inFormat, String molString) {
+        OBConversion conv = new OBConversion();
+        OBMol mol = new OBMol();
+        conv.SetInFormat(inFormat);
+        conv.ReadString(mol, molString);
+        return mol;
     }
 }

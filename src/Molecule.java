@@ -88,21 +88,23 @@ public class Molecule {
     }
 
     public void genStructure(String format) throws Exception {
+        StructureConverter structureConverter = new StructureConverter();
         System.loadLibrary("openbabel_java");
         if (cml != null) {
-            setStructure(StructureConverter.fromCmlToFormat(cml, format));
+            setStructure(structureConverter.fromCmlToFormat(cml, format));
         } else if (smi != null) {
-            setStructure(StructureConverter.fromSmilesToFormat(smi, format));
+            setStructure(structureConverter.fromSmilesToFormat(smi, format));
         } else {
             throw new Exception("Please generate CML or SMILES before structure");
         }
     }
 
     public void genMol() throws Exception {
+        StructureConverter structureConverter = new StructureConverter();
         if (cml != null) {
-            setMol(StructureConverter.fromCmlToMol(cml));
+            setMol(structureConverter.fromCmlToMol(cml));
         } else if (smi != null) {
-            setMol(StructureConverter.fromSmilesToMol(smi));
+            setMol(structureConverter.fromSmilesToMol(smi));
         } else {
             throw new Exception("Please generate CML or SMI before creating open babel molecule, \n" +
                     "or use built in open babel OBConversion to convert between files.");
