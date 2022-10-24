@@ -19,5 +19,6 @@
     <orderEntry type="library" name="uk.ac.cam.ch.opsin.core" level="project" />
     <orderEntry type="library" name="apache.logging.log4j.core" level="project" />
     <orderEntry type="library" name="openbabel" level="project" />
+    <orderEntry type="library" name="OpenBabel-3.1" level="project" />
   </component>
 </module>

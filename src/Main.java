@@ -30,12 +30,12 @@ public class Main {
         for (String name : Settings.getStringMoleculeNames()) {
             String smi = NameConverter.nameToSmi(name);
             if (smi != null) {
-//                OBMol mol = structureConverter.fromSmilesToMol(smi);
-//                assert mol != null;
-//                System.out.println(mol);
-//                OBMol molOpt = structureOptimizer.molConjugateGradient(mol);
-//                String molString = structureConverter.fromMolToFormat(molOpt, "xyz");
-//                System.out.println(molString);
+                OBMol mol = structureConverter.fromSmilesToMol(smi);
+                assert mol != null;
+                System.out.println(mol);
+                OBMol molOpt = structureOptimizer.molConjugateGradient(mol);
+                String molString = structureConverter.fromMolToFormat(molOpt, "xyz");
+                System.out.println(molString);
             }
         }
     }

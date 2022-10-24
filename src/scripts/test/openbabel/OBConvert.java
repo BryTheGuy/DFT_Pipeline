@@ -14,7 +14,7 @@ public class OBConvert {
 
     public void run()
     {
-        run("CC#CC=O");
+        run("c1ccccc1");
     }
 
     public void run(String smi)
