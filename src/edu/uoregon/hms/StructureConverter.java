@@ -60,8 +60,8 @@ public class StructureConverter {
         if (conv.SetInAndOutFormats("cml", outFormat)) {
             conv.ReadString(mol, cml);
             mol.AddHydrogens();
-            // builder.Build(mol);
-            // mol.Center();
+             builder.Build(mol);
+             mol.Center();
             return conv.WriteString(mol);
         }
         return null;
