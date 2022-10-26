@@ -1,6 +1,10 @@
 import edu.uoregon.hms.NameConverter;
 import edu.uoregon.hms.StructureConverter;
+import org.jetbrains.annotations.NotNull;
+import org.openbabel.OBConversion;
 import org.openbabel.OBMol;
+
+import java.nio.file.Path;
 
 public class Molecule {
     private String name;
@@ -109,5 +113,33 @@ public class Molecule {
             throw new Exception("Please generate CML or SMI before creating open babel molecule, \n" +
                     "or use built in open babel OBConversion to convert between files.");
         }
+    }
+
+    public void genFileTest() {
+        OBConversion conv = new OBConversion();
+        conv.SetOutFormat("gau");
+        conv.WriteFile(getMol(), "./output.txt");
+    }
+
+    public void genFile() {
+        genFile(getMol(), getFormat(), "./output.txt");
+    }
+
+    public void genFile(String path) {
+        genFile(getMol(), getFormat(), path);
+    }
+
+    public void genFile(String format, String path) {
+        genFile(getMol(), format, path);
+    }
+
+    public void genFile(OBMol mol,  String path) {
+        genFile(mol, getFormat(), path);
+    }
+
+    public void genFile(@NotNull OBMol mol, @NotNull String format, @NotNull String path) {
+        OBConversion conv = new OBConversion();
+        conv.SetOutFormat(format);
+        conv.WriteFile(mol, path);
     }
 }
