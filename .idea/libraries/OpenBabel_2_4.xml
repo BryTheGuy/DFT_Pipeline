@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="OpenBabel-2.4">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../../../../Program Files/OpenBabel-2.4.1" />
+    </CLASSES>
+    <JAVADOC />
+    <NATIVE>
+      <root url="file://$PROJECT_DIR$/../../../../Program Files/OpenBabel-2.4.1" />
+    </NATIVE>
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../../../../Program Files/OpenBabel-2.4.1" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/../../../../Program Files/OpenBabel-2.4.1" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/../../../../Program Files/OpenBabel-2.4.1" recursive="false" type="SOURCES" />
+  </library>
+</component>
