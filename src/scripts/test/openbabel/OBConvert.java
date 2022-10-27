@@ -13,17 +13,22 @@ public class OBConvert {
 
     public void run()
     {
-        OBConversion conv = new OBConversion();
-        OBMol mol = new OBMol();
-        conv.SetInFormat("smi");
-        conv.ReadString(mol, "c1ccccc1");
-        conv.SetOutFormat("xyz");
+        run("c1ccccc1");
+    }
+
+    public void run(String smi)
+    {
         try {
+            OBConversion conv = new OBConversion();
+            OBMol mol = new OBMol();
             OBBuilder builder = new OBBuilder();
-            mol.AddHydrogens();
-            builder.Build(mol);
-            mol.Center();
-            System.out.println(conv.WriteString(mol));
+            if (conv.SetInAndOutFormats("smi", "xyz")) {
+                conv.ReadString(mol, smi);
+                mol.AddHydrogens();
+                builder.Build(mol);
+                mol.Center();
+                System.out.println(conv.WriteString(mol));
+            }
         } catch (Exception e) {
             System.err.println("Exception caught => " + e);
         }
