@@ -13,20 +13,24 @@ public class OBConvert {
 
     public void run()
     {
-        run("CN1C=NC2=C1C(=O)N(C(=O)N2C)C"); // Caffeine
+        run("c1ccccc1");
     }
 
     public void run(String smi)
     {
-        OBConversion conv = new OBConversion();
-        OBMol mol = new OBMol();
-        OBBuilder builder = new OBBuilder();
-        if (conv.SetInAndOutFormats("smi", "xyz")) {
-            conv.ReadString(mol, smi);
-            mol.AddHydrogens();
-            builder.Build(mol);
-            mol.Center();
-            System.out.println(conv.WriteString(mol));
+        try {
+            OBConversion conv = new OBConversion();
+            OBMol mol = new OBMol();
+            OBBuilder builder = new OBBuilder();
+            if (conv.SetInAndOutFormats("smi", "xyz")) {
+                conv.ReadString(mol, smi);
+                mol.AddHydrogens();
+                builder.Build(mol);
+                mol.Center();
+                System.out.println(conv.WriteString(mol));
+            }
+        } catch (Exception e) {
+            System.err.println("Exception caught => " + e);
         }
     }
 

@@ -14,10 +14,22 @@ public class OPSINCovert {
     public void nameToCML(String moleculeName) {
         OpsinResult result = nts.parseChemicalName(moleculeName, ntsConfig);
         String cml = result.getPrettyPrintedCml();
-        String smiles = result.getSmiles();
-        System.out.println("SMILES: " + smiles);
         System.out.print("cml: ");
         System.out.println(cml);
+    }
+
+    public void nameToSmiles() {
+        nameToSmiles("Propanal");
+    }
+
+    public void nameToSmiles(String moleculeName) {
+        OpsinResult result = nts.parseChemicalName(moleculeName, ntsConfig);
+        String smiles = result.getSmiles();
+        String extendedSmiles = result.getExtendedSmiles();
+        System.out.println("SMILES: ");
+        System.out.println(smiles);
+        System.out.println("Extended SMILES: ");
+        System.out.println(extendedSmiles);
     }
 
     public OPSINCovert()
@@ -34,6 +46,7 @@ public class OPSINCovert {
 
         OPSINCovert test = new OPSINCovert();
 
+        test.nameToSmiles();
         test.nameToCML();
     }
 }
