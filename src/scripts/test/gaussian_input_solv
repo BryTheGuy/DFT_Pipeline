@@ -1,0 +1,7 @@
+%NProcShared=20
+%mem=50GB
+%chk=*maybe*.chk
+
+#p PBEH1PBE/def2svp opt  integral=superfinegrid freq SCRF=(Solvent=Water)
+
+Auto Submitted Job
