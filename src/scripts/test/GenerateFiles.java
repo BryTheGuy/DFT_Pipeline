@@ -1,49 +1,46 @@
 package scripts.test;
 
-import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class GenerateFiles {
-    public static void joinFiles(File destination, File[] sources)
-            throws IOException {
-        OutputStream output = null;
-        try {
-            output = createAppendableStream(destination);
-            for (File source : sources) {
-                appendFile(output, source);
-            }
-        } finally {
-            IOUtils.closeQuietly(output);
-        }
-    }
-
-    private static BufferedOutputStream createAppendableStream(File destination) throws FileNotFoundException
-    {
-        return new BufferedOutputStream(new FileOutputStream(destination, true));
-    }
-
-    private static void appendFile(OutputStream output, File source)
-            throws IOException {
-        InputStream input = null;
-        try {
-            input = new BufferedInputStream(new FileInputStream(source));
-            IOUtils.copy(input, output);
-        } finally {
-            IOUtils.closeQuietly(input);
-        }
-    }
-
-    public static void appendToFile(String coords, String template) throws FileNotFoundException {
+    @SuppressWarnings("ReassignedVariable")
+    public static void genFile(String coords, @NotNull String template) throws FileNotFoundException {
         Path templateInput;
-        switch (template)
-        {
+        switch (template) {
             case "solv" -> templateInput = Paths.get("gaussian_input_solv");
             case "opt" -> templateInput = Paths.get("gaussian_input_opt");
             default -> throw new IllegalStateException("Unexpected value: " + template);
         }
-        BufferedReader buffRead = new BufferedReader(new FileReader(templateInput.toString()));
+
+        PrintWriter printWriter = new PrintWriter("gua_output");
+
+        try (BufferedReader buffRead = new BufferedReader(new FileReader(templateInput.toString()))) {
+            String line = buffRead.readLine();
+            while (line != null) {
+                printWriter.println(line);
+                line = buffRead.readLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (BufferedReader reader = new BufferedReader(new StringReader(coords))) {
+            reader.readLine();
+            String line = reader.readLine();
+            while (line != null) {
+                printWriter.println(line);
+                line = reader.readLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        printWriter.flush();
+        printWriter.close();
+
     }
 }
