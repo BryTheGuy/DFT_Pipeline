@@ -1,3 +1,4 @@
+import edu.uoregon.hms.GenerateFiles;
 import edu.uoregon.hms.NameConverter;
 import edu.uoregon.hms.StructureConverter;
 import org.jetbrains.annotations.NotNull;
@@ -5,6 +6,7 @@ import org.openbabel.OBConversion;
 import org.openbabel.OBMol;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Molecule {
     private String name;
@@ -118,28 +120,37 @@ public class Molecule {
     public void genFileTest() {
         OBConversion conv = new OBConversion();
         conv.SetOutFormat("gau");
-        conv.WriteFile(getMol(), "./output.txt");
+        conv.WriteFile(getMol(), "output.txt");
     }
 
     public void genFile() {
-        genFile(getMol(), getFormat(), "./output.txt");
+        genFile(getMol(), getFormat(), Paths.get("output.txt"));
     }
 
-    public void genFile(String path) {
+    public void genFile(Path path) {
         genFile(getMol(), getFormat(), path);
     }
 
-    public void genFile(String format, String path) {
+    public void genFile(String format) {
+        genFile(getMol(), format, Paths.get("output.txt"));
+    }
+
+    public void genFile(String format, Path path) {
         genFile(getMol(), format, path);
     }
 
-    public void genFile(OBMol mol,  String path) {
+    public void genFile(OBMol mol,  Path path) {
         genFile(mol, getFormat(), path);
     }
 
-    public void genFile(@NotNull OBMol mol, @NotNull String format, @NotNull String path) {
+    public void genFile(@NotNull OBMol mol, @NotNull String format, @NotNull Path path) {
         OBConversion conv = new OBConversion();
         conv.SetOutFormat(format);
-        conv.WriteFile(mol, path);
+        conv.WriteFile(mol, String.valueOf(path));
+    }
+
+    public void makeFile(String template) {
+        GenerateFiles generateFiles = new GenerateFiles();
+        generateFiles.genFile(getMol(), template);
     }
 }
