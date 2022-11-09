@@ -1,9 +1,11 @@
 package scripts.test.openbabel;
 
+import org.jetbrains.annotations.TestOnly;
 import org.openbabel.OBBuilder;
 import org.openbabel.OBConversion;
 import org.openbabel.OBMol;
 
+@TestOnly
 public class OBConvert {
 
     public OBConvert()

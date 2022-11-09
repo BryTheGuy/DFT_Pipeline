@@ -14,24 +14,16 @@ public class GenerateFiles {
         switch (template) {
             case "solv" -> templateInput = inputSolv;
             case "opt" -> templateInput = Paths.get("gaussian_input_opt");
-            // TODO: make copy of mol
-            // TODO: get charge and multiplicity
-            // TODO: increase charge on copy (maybe opt) write to file or whatever
-            case "solv_ox" -> {
-                templateInput = inputSolv;
-            }
+            case "solv_ox" -> templateInput = inputSolv;
             default -> throw new IllegalStateException("Unexpected value: " + template);
         }
-
     }
 
-    private void makeFile(String coords, String templateInput, boolean oxidized) {
-
-    }
-
-    private void chargeChecker(OBMol mol, boolean oxidized) {
-        if (oxidized) {
-
+    private void makeFile(OBMol mol, String templateInput, boolean oxidize) {
+        Redox redox = new Redox();
+        boolean oxidized = redox.chargeChecker(mol, true);
+        if (oxidize) {
+            OBMol redoxMol = redox.increaseCharge(mol);
         }
     }
 }

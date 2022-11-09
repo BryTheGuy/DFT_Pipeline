@@ -3,13 +3,26 @@ package edu.uoregon.hms;
 import org.openbabel.OBMol;
 
 public class Redox {
-    // TODO: make copy of mol
-    // TODO: get charge and multiplicity
-    // TODO: increase charge on copy (maybe opt) write to file or whatever
-    public static void increaseCharge(OBMol mol) {
-        OBMol mol1 = mol;
-        int charge = mol1.GetTotalCharge();
-        long multiplicity = mol1.GetTotalSpinMultiplicity();
-        mol1.SetTotalCharge(char);
+    public Redox() {
+        System.loadLibrary("openbabel_java");
+    }
+
+    public OBMol increaseCharge(OBMol molInput) {
+
+        OBMol mol = new OBMol(molInput); // make copy of molecule
+        StructureOptimizer opt = new StructureOptimizer();
+
+        mol.SetTotalCharge(mol.GetTotalCharge() + 1); // Increase charge
+        opt.molConjugateGradient(mol); // optimize new molecule
+
+        return mol; // Return new molecule
+    }
+
+    public boolean chargeChecker(OBMol mol, boolean charged) {
+        if (charged) {
+            return mol.GetTotalCharge() == 1;
+        } else {
+            return mol.GetTotalCharge() == 0;
+        }
     }
 }

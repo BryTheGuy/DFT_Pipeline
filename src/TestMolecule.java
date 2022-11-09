@@ -1,7 +1,7 @@
 public class TestMolecule {
     public static void main(String[] args) {
 
-        Molecule molecule = new Molecule("1,3-Pentadiene");
+        Molecule molecule = new Molecule("caffeine");
 
         molecule.genSmi();
         molecule.genCml();

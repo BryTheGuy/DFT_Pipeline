@@ -1,7 +1,9 @@
 package scripts.test.openbabel;
 
+import org.jetbrains.annotations.TestOnly;
 import org.openbabel.*;
 
+@TestOnly
 public class OBConverge {
     public OBConverge()
     {
