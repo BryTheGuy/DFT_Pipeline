@@ -17,12 +17,4 @@ public class Redox {
 
         return mol; // Return new molecule
     }
-
-    public boolean chargeChecker(OBMol mol, boolean charged) {
-        if (charged) {
-            return mol.GetTotalCharge() == 1;
-        } else {
-            return mol.GetTotalCharge() == 0;
-        }
-    }
 }

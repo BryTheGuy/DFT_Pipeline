@@ -8,27 +8,27 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class GenerateFiles {
-    public void genFile(OBMol mol, @NotNull String template) {
+    public void jobType(OBMol mol, @NotNull String template) {
         Redox redox = new Redox();
-        final Path inputSolvation = Paths.get("gaussian_input_solv");
-        final Path inputOptimize = Paths.get("gaussian_input_opt");
+        final Path inputSolvation = Paths.get("src/edu/uoregon/hms/resources/gaussian_input_solv");
+        final Path inputOptimize = Paths.get("src/edu/uoregon/hms/resources/gaussian_input_opt");
         switch (template) {
-            case "solv" -> makeFile(mol, inputSolvation);
-            case "opt" -> makeFile(mol, inputOptimize);
-            case "solv_ox" -> makeFile(redox.increaseCharge(mol), inputSolvation);
-            case "opt_ox" -> makeFile(redox.increaseCharge(mol), inputOptimize);
+            case "opt" -> makeFile(mol, inputOptimize, "opt");
+            case "solv" -> makeFile(mol, inputSolvation, "solv");
+            case "opt_ox" -> makeFile(redox.increaseCharge(mol), inputOptimize, "opt_ox");
+            case "solv_ox" -> makeFile(redox.increaseCharge(mol), inputSolvation, "solv_ox");
             default -> throw new IllegalStateException("Unexpected value: " + template);
         }
     }
 
-    private void makeFile(OBMol mol, Path templateInput) {
+    private void makeFile(OBMol mol, Path templateInput, String file) {
 
         StructureConverter sc = new StructureConverter();
         String coords = sc.fromMolToFormat(mol, "gau");
 
         try
         {
-            PrintWriter printWriter = new PrintWriter("gau_output");
+            PrintWriter printWriter = new PrintWriter(file);
             try (BufferedReader buffRead = new BufferedReader(new FileReader(templateInput.toFile())))
             {
                 String line = buffRead.readLine();
@@ -58,14 +58,4 @@ public class GenerateFiles {
             throw new RuntimeException(e);
         }
     }
-
-    //    private OBMol makeCharge(OBMol mol, boolean oxidize) {
-//        Redox redox = new Redox();
-//        if (oxidize) {
-//            return redox.increaseCharge(mol);
-//        } else {
-//            return mol;
-//        }
-//    }
-
 }

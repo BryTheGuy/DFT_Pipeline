@@ -151,6 +151,6 @@ public class Molecule {
 
     public void makeFile(String template) {
         GenerateFiles generateFiles = new GenerateFiles();
-        generateFiles.genFile(getMol(), template);
+        generateFiles.jobType(getMol(), template);
     }
 }

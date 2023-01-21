@@ -26,7 +26,7 @@ public class TestMolecule {
             e.printStackTrace();
         }
 
-        molecule.genFile();
+        molecule.makeFile("opt");
 
         System.out.println("The SMILES is: " + molecule.getSmi());
         System.out.print("The CML is: ");
