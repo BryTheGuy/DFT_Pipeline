@@ -58,4 +58,11 @@ public class GenerateFiles {
             throw new RuntimeException(e);
         }
     }
+
+    public void makeDirs(String name) {
+        new File("../molecules/" + name + "/opt/").mkdirs();
+        new File("../molecules/" + name + "/opt_ox/").mkdirs();
+        new File("../molecules/" + name + "/solv/").mkdirs();
+        new File("../molecules/" + name + "/solv_ox/").mkdirs();
+    }
 }

@@ -1,5 +1,11 @@
+import edu.uoregon.hms.Locator;
+
 public class TestMolecule {
     public static void main(String[] args) {
+
+        Locator locator = new Locator();
+
+        System.out.println(locator.getSource());
 
         Molecule molecule = new Molecule("caffeine");
 
@@ -26,7 +32,11 @@ public class TestMolecule {
             e.printStackTrace();
         }
 
-        molecule.makeFile("opt");
+//        molecule.genFile("opt");
+
+//        molecule.genFourFiles();
+
+        molecule.genDirs();
 
         System.out.println("The SMILES is: " + molecule.getSmi());
         System.out.print("The CML is: ");

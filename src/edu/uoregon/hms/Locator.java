@@ -65,12 +65,12 @@ public class Locator {
         return filePath; // theoretical file path to file named fileName in executed directory
     }
 
-    public static String getSource() {
+    public String getSource() {
         String path = Locator.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         return decode(path, StandardCharsets.UTF_8);
     }
 
-    public static String getFileName() {
+    public String getFileName() {
         return fileName;
     }
     public static void setFileName(String fileName) {

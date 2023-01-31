@@ -123,34 +123,50 @@ public class Molecule {
         conv.WriteFile(getMol(), "output.txt");
     }
 
-    public void genFile() {
-        genFile(getMol(), getFormat(), Paths.get("output.txt"));
+    public void newFile() {
+        newFile(getMol(), getFormat(), Paths.get("output.txt"));
     }
 
-    public void genFile(Path path) {
-        genFile(getMol(), getFormat(), path);
+    public void newFile(Path path) {
+        newFile(getMol(), getFormat(), path);
     }
 
-    public void genFile(String format) {
-        genFile(getMol(), format, Paths.get("output.txt"));
+    public void newFile(String format) {
+        newFile(getMol(), format, Paths.get("output.txt"));
     }
 
-    public void genFile(String format, Path path) {
-        genFile(getMol(), format, path);
+    public void newFile(String format, Path path) {
+        newFile(getMol(), format, path);
     }
 
-    public void genFile(OBMol mol,  Path path) {
-        genFile(mol, getFormat(), path);
+    public void newFile(OBMol mol, Path path) {
+        newFile(mol, getFormat(), path);
     }
 
-    public void genFile(@NotNull OBMol mol, @NotNull String format, @NotNull Path path) {
+    public void newFile(@NotNull OBMol mol, @NotNull String format, @NotNull Path path) {
         OBConversion conv = new OBConversion();
         conv.SetOutFormat(format);
         conv.WriteFile(mol, String.valueOf(path));
     }
 
-    public void makeFile(String template) {
+    public void genFile(String template) {
         GenerateFiles generateFiles = new GenerateFiles();
+
         generateFiles.jobType(getMol(), template);
+    }
+
+    public void genFourFiles() {
+        GenerateFiles generateFiles = new GenerateFiles();
+
+        generateFiles.jobType(getMol(), "opt");
+        generateFiles.jobType(getMol(), "opt_ox");
+        generateFiles.jobType(getMol(), "solv");
+        generateFiles.jobType(getMol(), "solv_ox");
+    }
+
+    public void genDirs() {
+        GenerateFiles generateFiles = new GenerateFiles();
+
+        generateFiles.makeDirs(getName());
     }
 }
