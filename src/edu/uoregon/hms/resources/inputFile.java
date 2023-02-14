@@ -2,7 +2,7 @@ package edu.uoregon.hms.resources;
 
 public enum inputFile {
     opt,
-    opt_ox,
+    ip,
     solv,
-    solv_ox,
+    ox,
 }
