@@ -2,4 +2,4 @@
 %mem=50GB
 %chk=*maybe*.chk
 
-#p PBEH1PBE/def2svp opt  integral=superfinegrid freq SCRF=(Solvent=Water)
+#p PBEH1PBE/def2svp opt integral=superfinegrid freq SCRF=(Solvent=Water)

@@ -6,6 +6,7 @@ import org.openbabel.OBMol;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 public class GenerateFiles {
     public void jobType(OBMol mol, @NotNull String template) {
@@ -15,8 +16,8 @@ public class GenerateFiles {
         switch (template) {
             case "opt" -> makeFile(mol, inputOptimize, "opt");
             case "solv" -> makeFile(mol, inputSolvation, "solv");
-            case "ip" -> makeFile(redox.increaseCharge(mol), inputOptimize, "ip");
-            case "ox" -> makeFile(redox.increaseCharge(mol), inputSolvation, "ox");
+            case "ip" -> makeFile(redox.addElectron(mol), inputOptimize, "ip");
+            case "ox" -> makeFile(redox.addElectron(mol), inputSolvation, "ox");
             default -> throw new IllegalStateException("Unexpected value: " + template);
         }
     }
@@ -60,9 +61,8 @@ public class GenerateFiles {
     }
 
     public void makeDirs(String name) {
-        new File("../molecules/" + name + "/opt/").mkdirs();
-        new File("../molecules/" + name + "/opt_ox/").mkdirs();
-        new File("../molecules/" + name + "/solv/").mkdirs();
-        new File("../molecules/" + name + "/solv_ox/").mkdirs();
+        for (String s : Arrays.asList("/opt/", "/ip/", "/solv/", "/ox/")) {
+            new File("../molecules/" + name + s).mkdirs();
+        }
     }
 }
