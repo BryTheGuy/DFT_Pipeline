@@ -159,9 +159,9 @@ public class Molecule {
         GenerateFiles generateFiles = new GenerateFiles();
 
         generateFiles.jobType(getMol(), "opt");
-        generateFiles.jobType(getMol(), "opt_ox");
+        generateFiles.jobType(getMol(), "ip");
         generateFiles.jobType(getMol(), "solv");
-        generateFiles.jobType(getMol(), "solv_ox");
+        generateFiles.jobType(getMol(), "ox");
     }
 
     public void genDirs() {
