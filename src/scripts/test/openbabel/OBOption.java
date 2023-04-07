@@ -28,12 +28,19 @@ public class OBOption {
                 mol.Center();
             }
 
-            String keywords = format("""
+            String header = format("""
                     %%NProcShared=28
                     %%mem=50GB
                     %%chk=%s.chk
                                 
-                    #p PBEH1PBE/def2svp opt integral=superfinegrid freq""", mol.GetTitle());
+                    """, mol.GetTitle());
+
+            String functional = "B3LYP";
+            String basisSet = "6-311++G**";
+
+            String options = "#p %s/%s opt integral=superfinegrid freq";
+
+            String keywords = header + format(options, functional, basisSet);
 
             c.AddOption("k", OUTOPTIONS, keywords);
 
