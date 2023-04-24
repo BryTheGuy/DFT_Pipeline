@@ -1,5 +1,6 @@
 import edu.uoregon.hms.GenerateFiles;
 import edu.uoregon.hms.NameConverter;
+import edu.uoregon.hms.Settings;
 import edu.uoregon.hms.StructureConverter;
 import org.jetbrains.annotations.NotNull;
 import org.openbabel.OBConversion;
@@ -7,9 +8,13 @@ import org.openbabel.OBMol;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 
 public class Molecule {
     private String name;
+    private String name_no_space;
     private String smi;
     private String cml;
     private OBMol mol;
@@ -41,6 +46,10 @@ public class Molecule {
         return name;
     }
 
+    public String getNoSpaceName() {
+        return name_no_space;
+    }
+
     public String getStructure() {
         return structure;
     }
@@ -63,6 +72,10 @@ public class Molecule {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setNameNoSpace() {
+        this.name_no_space = name.replace(' ', '_');
     }
 
     public void setStructure(String structure) {
@@ -143,9 +156,9 @@ public class Molecule {
         newFile(mol, getFormat(), path);
     }
 
-    public void newFile(@NotNull OBMol mol, @NotNull String format, @NotNull Path path) {
+    public void newFile(@NotNull OBMol mol, @NotNull String fileFormat, @NotNull Path path) {
         OBConversion conv = new OBConversion();
-        conv.SetOutFormat(format);
+        conv.SetOutFormat(fileFormat);
         conv.WriteFile(mol, String.valueOf(path));
     }
 
@@ -155,18 +168,59 @@ public class Molecule {
         generateFiles.jobType(getMol(), template);
     }
 
-    public void genFourFiles() {
-        GenerateFiles generateFiles = new GenerateFiles();
+    public void genAllFiles() {
+        genDirs();
 
-        generateFiles.jobType(getMol(), "opt");
-        generateFiles.jobType(getMol(), "ip");
-        generateFiles.jobType(getMol(), "solv");
-        generateFiles.jobType(getMol(), "ox");
+        GenerateFiles generateFiles = new GenerateFiles();
+        LinkedList<String> fileNames = new LinkedList<>();
+
+        String fileTitle = getNoSpaceName();
+
+        for (String type : Settings.getCalcTypes()) {
+            generateFiles.jobType(getMol(), type);
+            fileNames.add(fileTitle + '-' + type);
+        }
+        generateFiles.makeGaussList(fileTitle, fileNames);
+
+        GenerateFiles.pythonSubmit();
     }
 
     public void genDirs() {
         GenerateFiles generateFiles = new GenerateFiles();
 
-        generateFiles.makeDirs(getName());
+        generateFiles.makeDirs(getNoSpaceName());
+    }
+
+    public void copyPy() {
+        GenerateFiles generateFiles = new GenerateFiles();
+
+        GenerateFiles.pythonSubmit();
+    }
+
+    public void defaultRun() {
+        setNameNoSpace();
+
+        Settings.setFunctional();
+        Settings.setBasisSet();
+        Settings.setOptions();
+        Settings.setFileHeader();
+        Settings.setFileHeaderChk();
+        Settings.setCalcTypes();
+
+        setFormat("gau");
+
+        try {
+            genStructure();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            genMol();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        genAllFiles();
     }
 }

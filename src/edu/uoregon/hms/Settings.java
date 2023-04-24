@@ -18,6 +18,7 @@ public class Settings {
     private static String FUNCTIONAL = "B3LYP";
     private static String BASIS_SET = "6-311+G";
     private static String FILE_HEADER;
+    private static String FILE_HEADER_CHK;
     private static String OPTIONS;
 
     private static String SLURM_SUBMIT = """
@@ -120,6 +121,22 @@ public class Settings {
         Settings.FILE_HEADER = FILE_HEADER;
     }
 
+    public static String getFileHeaderChk() {return FILE_HEADER_CHK;}
+
+    public static void setFileHeaderChk() {
+        setFileHeaderChk("""
+                    %%NProcShared=28
+                    %%mem=50GB
+                    %%chk=%s.chk
+                    %%oldchk=%s-opt.chk
+                    
+                    """);
+    }
+
+    public static void setFileHeaderChk(String FILE_HEADER_CHK) {
+        Settings.FILE_HEADER_CHK = FILE_HEADER_CHK;
+    }
+
     public static String getOptions() {return OPTIONS;}
 
     public static ArrayList<String> getCalcTypes() {
@@ -127,7 +144,7 @@ public class Settings {
     }
 
     public static void setCalcTypes() {
-        setCalcTypes((ArrayList<String>) Arrays.asList("opt", "pos_ion", "solv", "pos_solv", "neg_ion", "neg_solv"));
+        setCalcTypes(new ArrayList<>(Arrays.asList("opt", "pos_ion", "solv", "pos_solv", "neg_ion", "neg_solv")));
     }
 
     public static void setCalcTypes(ArrayList<String> calcTypes) {
@@ -190,11 +207,11 @@ public class Settings {
         Settings.ACCOUNT = ACCOUNT;
     }
 
-    public void setOptions() {
+    public static void setOptions() {
         setOptions("#p %s/%s %s integral=superfinegrid freq");
     }
 
-    public void setOptions(String Options) {
+    public static void setOptions(String Options) {
         Settings.OPTIONS = Options;
     }
 }

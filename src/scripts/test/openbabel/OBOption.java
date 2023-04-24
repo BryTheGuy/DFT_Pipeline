@@ -1,5 +1,6 @@
 package scripts.test.openbabel;
 
+import edu.uoregon.hms.Settings;
 import org.openbabel.OBBuilder;
 import org.openbabel.OBConversion;
 import org.openbabel.OBMol;

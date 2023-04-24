@@ -113,17 +113,17 @@ public class FileInterpreter {
     public static @Nullable String parseLine(@NotNull String inLine) {
         countParse++;
         // inLine = inLine;
-        if (inLine.contains(" $")) {
-            int end$ = inLine.indexOf(" $");
+        if (inLine.contains("$")) {
+            int end$ = inLine.indexOf("$");
             String substring$$ = inLine.substring(0, end$).stripLeading();
-            if (substring$$.contains(" (CAS)")) {
-                int endCAS = substring$$.indexOf(" (CAS)");
+            if (substring$$.contains("(CAS)")) {
+                int endCAS = substring$$.indexOf("(CAS)");
                 return substring$$.substring(0, endCAS).stripLeading();
             } else {
                 return substring$$;
             }
-        } else if (inLine.contains(" (CAS)")) {
-            int endCAS = inLine.indexOf(" (CAS)");
+        } else if (inLine.contains("(CAS)")) {
+            int endCAS = inLine.indexOf("(CAS)");
             return inLine.substring(0, endCAS).stripLeading();
         }
         return null;

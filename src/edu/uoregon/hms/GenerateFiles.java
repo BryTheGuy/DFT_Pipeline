@@ -5,24 +5,32 @@ import org.openbabel.OBConversion;
 import org.openbabel.OBMol;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import static java.lang.String.format;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.openbabel.OBConversion.Option_type.OUTOPTIONS;
 
 public class GenerateFiles {
     public void jobType(OBMol mol, @NotNull String template) {
+        jobType(mol, template, "gau");
+    }
+
+    public void jobType(OBMol mol, @NotNull String template, String fileFormat) {
         Redox redox = new Redox();
-        final Path inputSolvation = Paths.get("src/edu/uoregon/hms/resources/gaussian_input_solv");
-        final Path inputOptimize = Paths.get("src/edu/uoregon/hms/resources/gaussian_input_opt");
         switch (template) {
-            case "opt" -> fileBuilder(mol, "opt");
-            case "solv" -> fileBuilder(mol, "geom=checkpoint SCRF");
-            case "ip" -> fileBuilder(redox.addElectron(mol), "geom=checkpoint");
-            case "ox" -> fileBuilder(redox.addElectron(mol), "geom=checkpoint SCRF");
+            case "opt" -> fileBuilder(mol, "opt", template, fileFormat);
+            case "solv" -> fileBuilder(mol, "geom=checkpoint SCRF", template, fileFormat);
+            case "pos_ion" -> fileBuilder(redox.removeElectron(mol), "geom=checkpoint", template, fileFormat);
+            case "pos_solv" -> fileBuilder(redox.removeElectron(mol), "geom=checkpoint SCRF", template, fileFormat);
+            case "neg_ion" -> fileBuilder(redox.addElectron(mol), "geom=checkpoint", template, fileFormat);
+            case "neg_solv" -> fileBuilder(redox.addElectron(mol), "geom=checkpoint SCRF", template, fileFormat);
             default -> throw new IllegalStateException("Unexpected value: " + template);
         }
     }
@@ -65,15 +73,38 @@ public class GenerateFiles {
         }
     }
 
-    private void fileBuilder(OBMol mol, String calcType) {
+    private void fileBuilder(OBMol mol, String calcOption, String calcName, String fileFormat) {
         try {
             OBConversion conv = new OBConversion();
 
-            String keywords = format(Settings.getFileHeader() + Settings.getOptions(), mol.GetTitle(),
-                    Settings.getFunctional(), Settings.getBasisSet(), calcType);
+            conv.SetOutFormat(fileFormat);
 
+            String keywords;
+            if (calcName.equals("opt")) {
+                keywords = format(Settings.getFileHeader() + Settings.getOptions(),
+                        mol.GetTitle() + '-' + calcName,
+                        Settings.getFunctional(),
+                        Settings.getBasisSet(),
+                        calcOption);
+            }
+            else {
+                keywords = format(Settings.getFileHeaderChk() + Settings.getOptions(),
+                        mol.GetTitle() + '-' + calcName,
+                        mol.GetTitle(),
+                        Settings.getFunctional(),
+                        Settings.getBasisSet(),
+                        calcOption);
+            }
             conv.AddOption("k", OUTOPTIONS, keywords);
+
+            String molName = mol.GetTitle().replace(' ', '_');
+
+            conv.WriteFile(mol, "./molecules/" + molName + "/" + molName + '-' + calcName + ".inp");
+
+            System.out.println(conv.WriteString(mol));
+
         } catch (Exception e) {
+            System.err.println("Failed to generate gaussian input file for " + mol.GetTitle());
             throw new RuntimeException(e);
         }
     }
@@ -85,12 +116,10 @@ public class GenerateFiles {
 //    }
 
     public void makeDirs(String molName) {
-        for (String s : Settings.getCalcTypes()) {
-            new File("../molecules/" + molName).mkdirs();
-        }
+        new File("./molecules", molName).mkdirs();
     }
 
-    public void makeGauss(LinkedList<String> fileNames) {
+    public void makeGaussList(String fileTitle, LinkedList<String> fileNames) {
 
         String partition = Settings.getPartition();
         String job_name = "project";
@@ -109,13 +138,23 @@ public class GenerateFiles {
         builder.append('\n');
 
         try {
-            FileWriter fw = new FileWriter("q-tala-gauss");
+            FileWriter fw = new FileWriter(new File("./molecules/" + fileTitle, "q-tala-gauss"));
             fw.write(String.valueOf(builder));
             fw.close();
         } catch (IOException e) {
             System.err.println("Failed to write 'q-tala-gauss' file");
             throw new RuntimeException(e);
         }
+    }
 
+    public static void pythonSubmit() {
+        Path originalFile = Paths.get("src/edu/uoregon/hms/resources/run_slurm.py").toAbsolutePath();
+        Path copiedFile = Paths.get("./molecules/submit.py").toAbsolutePath();
+
+        try {
+            Files.copy(originalFile, copiedFile, REPLACE_EXISTING);
+        } catch (IOException e) {
+            System.err.format("IOException: %s%n", e);
+        }
     }
 }

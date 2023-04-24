@@ -29,14 +29,14 @@ public class Redox {
 
         OBMol mol = new OBMol(molInput); // make copy of molecule
 
-        return increaseCharge(increaseMultiplicity(mol));
+        return decreaseCharge(increaseMultiplicity(mol));
     }
 
     public OBMol decreaseCharge(OBMol molInput) {
 
         OBMol mol = new OBMol(molInput); // make copy of molecule
 
-        mol.SetTotalCharge(mol.GetTotalCharge() + 1); // decrease charge by one
+        mol.SetTotalCharge(mol.GetTotalCharge() - 1); // decrease charge by one
 
         return mol; // return new molecule
     }
@@ -45,6 +45,6 @@ public class Redox {
 
         OBMol mol = new OBMol(molInput);
 
-        return decreaseCharge(increaseMultiplicity(mol));
+        return increaseCharge(increaseMultiplicity(mol));
     }
 }
