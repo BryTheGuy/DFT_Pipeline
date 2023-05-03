@@ -5,15 +5,11 @@ import org.openbabel.OBConversion;
 import org.openbabel.OBMol;
 
 import java.io.*;
-import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.LinkedList;
-import java.util.Objects;
-import java.util.Set;
 
 import static java.lang.String.format;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;

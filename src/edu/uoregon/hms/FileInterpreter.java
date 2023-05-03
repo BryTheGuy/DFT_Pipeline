@@ -4,9 +4,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -20,9 +20,8 @@ public class FileInterpreter {
     static int countParse = 0;
     static int countAddList = 0;
     public static void readToList() {
-        File outputGCMS = new File(Locator.getFilePath()); // TODO: Transition to Settings based Path
-        // File outputGCMS = new File("C:\\Users\\bryce\\Documents\\Hendon_Lab\\GCMS_Redox\\GCMS_to_DFT\\WIP\\src\\resources\\hendon_fresh_1.txt");
-        try (BufferedReader reader = new BufferedReader(new FileReader(outputGCMS))) {
+        Path gcmsPath = Settings.getFilePath();
+        try (BufferedReader reader = new BufferedReader(new FileReader(gcmsPath.toFile()))) {
             Stream<String> lines = reader.lines().skip(Settings.getLinesInFileHeader());
             lines.forEachOrdered(FileInterpreter::addLineToList);
         } catch (IOException e) {

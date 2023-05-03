@@ -1,4 +1,3 @@
-import edu.uoregon.hms.Locator;
 import edu.uoregon.hms.Settings;
 
 public class TestMolecule {
@@ -15,9 +14,6 @@ public class TestMolecule {
 
         Settings.setFunctional("B3LYP");
         Settings.setBasisSet("6-311G");
-        Settings.setOptions();
-        Settings.setFileHeader();
-        Settings.setCalcTypes();
 
 //        try {
 //            molecule.genStructure("xyz");

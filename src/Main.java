@@ -1,16 +1,12 @@
-import edu.uoregon.hms.*;
-
-import org.jetbrains.annotations.NotNull;
-
-import org.openbabel.OBMol;
-
+import edu.uoregon.hms.FileInterpreter;
+import edu.uoregon.hms.Settings;
 import org.apache.commons.cli.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Iterator;
 
 public class Main {
     final static String VERSION = "0.1";
@@ -92,20 +88,11 @@ public class Main {
         FileInterpreter.readToList();
         FileInterpreter.checkLines();
 //        FileInterpreter.checker();
-//        StructureOptimizer structureOptimizer = new StructureOptimizer();
-//        StructureConverter structureConverter = new StructureConverter();
+
         for (String name : Settings.getStringMoleculeNames()) {
 //            String smi = NameConverter.nameToSmi(name);
             Molecule mol = new Molecule(name);
             mol.defaultRun();
-//            if (smi != null) {
-//                OBMol mol = structureConverter.fromSmilesToMol(smi);
-//                assert mol != null;
-//                System.out.println(mol);
-//                OBMol molOpt = structureOptimizer.molConjugateGradient(mol);
-//                String molString = structureConverter.fromMolToFormat(molOpt, "xyz");
-//                System.out.println(molString);
-//            }
         }
     }
     private static void setup() {
