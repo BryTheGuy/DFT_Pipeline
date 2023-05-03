@@ -1,9 +1,8 @@
 package edu.uoregon.hms;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 public class Settings {
     private static int LINE_LENGTH_OF_INTEREST;
@@ -13,13 +12,24 @@ public class Settings {
 
     private static LinkedList<String> stringLineList = new LinkedList<>();
     private static HashSet<String> stringMoleculeNames = new HashSet<>();
-    private static ArrayList<String> calcTypes = new ArrayList<>();
+    private static ArrayList<String> calcTypes = new ArrayList<>(Arrays.asList("opt", "pos_ion", "solv", "pos_solv", "neg_ion", "neg_solv"));
 
     private static String FUNCTIONAL = "B3LYP";
     private static String BASIS_SET = "6-311+G";
-    private static String FILE_HEADER;
-    private static String FILE_HEADER_CHK;
-    private static String OPTIONS;
+    private static String FILE_HEADER = """
+                    %%NProcShared=28
+                    %%mem=50GB
+                    %%chk=%s.chk
+                    
+                    """;
+    private static String FILE_HEADER_CHK = """
+                    %%NProcShared=28
+                    %%mem=50GB
+                    %%chk=%s.chk
+                    %%oldchk=%s-opt.chk
+                    
+                    """;
+    private static String OPTIONS = "#p %s/%s %s integral=superfinegrid freq";
 
     private static String SLURM_SUBMIT = """
             #!/bin/bash
@@ -40,6 +50,9 @@ public class Settings {
     private static int NODES;
     private static int TASKS_PER_NODE;
     private static String ACCOUNT;
+
+    private static Path INPUT_PATH;
+    private static Path OUTPUT_PATH = Paths.get(System.getProperty("user.dir"));
 
     public static int getWhiteTillText() {return WHITE_TILL_TEXT;}
     public static int getLineLengthOfInterest() {return LINE_LENGTH_OF_INTEREST;}
@@ -91,16 +104,11 @@ public class Settings {
 
     public static String getFunctional() {return FUNCTIONAL;}
 
-    public static void setFunctional() {
-        setFunctional("B3LYP");}
-
     public static void setFunctional(String FUNCTIONAL) {
         Settings.FUNCTIONAL = FUNCTIONAL;
     }
 
     public static String getBasisSet() {return BASIS_SET;}
-
-    public static void setBasisSet() {setBasisSet("6-311+G");}
 
     public static void setBasisSet(String BASIS_SET) {
         Settings.BASIS_SET = BASIS_SET;
@@ -108,30 +116,11 @@ public class Settings {
 
     public static String getFileHeader() {return FILE_HEADER;}
 
-    public static void setFileHeader() {
-        setFileHeader("""
-                    %%NProcShared=28
-                    %%mem=50GB
-                    %%chk=%s.chk
-                    
-                    """);
-    }
-
     public static void setFileHeader(String FILE_HEADER) {
         Settings.FILE_HEADER = FILE_HEADER;
     }
 
     public static String getFileHeaderChk() {return FILE_HEADER_CHK;}
-
-    public static void setFileHeaderChk() {
-        setFileHeaderChk("""
-                    %%NProcShared=28
-                    %%mem=50GB
-                    %%chk=%s.chk
-                    %%oldchk=%s-opt.chk
-                    
-                    """);
-    }
 
     public static void setFileHeaderChk(String FILE_HEADER_CHK) {
         Settings.FILE_HEADER_CHK = FILE_HEADER_CHK;
@@ -143,9 +132,6 @@ public class Settings {
         return calcTypes;
     }
 
-    public static void setCalcTypes() {
-        setCalcTypes(new ArrayList<>(Arrays.asList("opt", "pos_ion", "solv", "pos_solv", "neg_ion", "neg_solv")));
-    }
 
     public static void setCalcTypes(ArrayList<String> calcTypes) {
         Settings.calcTypes = calcTypes;
@@ -207,11 +193,32 @@ public class Settings {
         Settings.ACCOUNT = ACCOUNT;
     }
 
-    public static void setOptions() {
-        setOptions("#p %s/%s %s integral=superfinegrid freq");
-    }
-
     public static void setOptions(String Options) {
         Settings.OPTIONS = Options;
     }
+
+    public static Path getFilePath() {
+        return INPUT_PATH;
+    }
+
+    public static void setFilePath(Path filePath) {
+        Settings.INPUT_PATH = filePath;
+    }
+
+    public static void setFilePath(String filePath) {
+        Settings.INPUT_PATH = Paths.get(filePath).toAbsolutePath().normalize();
+    }
+
+    public static Path getOutputPath() {
+        return OUTPUT_PATH;
+    }
+
+    public static void setOutputPath(String outputPath) {
+        setOutputPath(Paths.get(outputPath).toAbsolutePath().normalize());
+    }
+
+    public static void setOutputPath(Path outputPath) {
+        OUTPUT_PATH = outputPath;
+    }
+    
 }

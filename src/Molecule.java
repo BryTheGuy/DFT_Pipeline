@@ -182,7 +182,7 @@ public class Molecule {
         }
         generateFiles.makeGaussList(fileTitle, fileNames);
 
-        GenerateFiles.pythonSubmit();
+        copyPy();
     }
 
     public void genDirs() {
@@ -192,20 +192,15 @@ public class Molecule {
     }
 
     public void copyPy() {
-        GenerateFiles generateFiles = new GenerateFiles();
-
         GenerateFiles.pythonSubmit();
     }
 
     public void defaultRun() {
         setNameNoSpace();
 
-        Settings.setFunctional();
-        Settings.setBasisSet();
-        Settings.setOptions();
-        Settings.setFileHeader();
-        Settings.setFileHeaderChk();
-        Settings.setCalcTypes();
+        genSmi();
+
+        genCml();
 
         setFormat("gau");
 

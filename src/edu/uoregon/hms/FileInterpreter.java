@@ -20,7 +20,7 @@ public class FileInterpreter {
     static int countParse = 0;
     static int countAddList = 0;
     public static void readToList() {
-        File outputGCMS = new File(Locator.getFilePath());
+        File outputGCMS = new File(Locator.getFilePath()); // TODO: Transition to Settings based Path
         // File outputGCMS = new File("C:\\Users\\bryce\\Documents\\Hendon_Lab\\GCMS_Redox\\GCMS_to_DFT\\WIP\\src\\resources\\hendon_fresh_1.txt");
         try (BufferedReader reader = new BufferedReader(new FileReader(outputGCMS))) {
             Stream<String> lines = reader.lines().skip(Settings.getLinesInFileHeader());

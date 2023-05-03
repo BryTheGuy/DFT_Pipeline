@@ -5,6 +5,7 @@ import org.openbabel.OBConversion;
 import org.openbabel.OBMol;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
@@ -12,6 +13,7 @@ import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.Objects;
+import java.util.Set;
 
 import static java.lang.String.format;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -99,7 +101,11 @@ public class GenerateFiles {
 
             String molName = mol.GetTitle().replace(' ', '_');
 
-            conv.WriteFile(mol, "./molecules/" + molName + "/" + molName + '-' + calcName + ".inp");
+            String fileName = molName + '-' + calcName + ".inp";
+
+            Path writePath = Settings.getOutputPath().resolve(Paths.get("molecule", molName, fileName));
+
+            conv.WriteFile(mol, String.valueOf(writePath));
 
             System.out.println(conv.WriteString(mol));
 
@@ -138,7 +144,7 @@ public class GenerateFiles {
         builder.append('\n');
 
         try {
-            FileWriter fw = new FileWriter(new File("./molecules/" + fileTitle, "q-tala-gauss"));
+            FileWriter fw = new FileWriter(new File(Settings.getOutputPath().toString() + fileTitle, "q-tala-gauss"));
             fw.write(String.valueOf(builder));
             fw.close();
         } catch (IOException e) {
@@ -148,11 +154,12 @@ public class GenerateFiles {
     }
 
     public static void pythonSubmit() {
-        Path originalFile = Paths.get("src/edu/uoregon/hms/resources/run_slurm.py").toAbsolutePath();
-        Path copiedFile = Paths.get("./molecules/submit.py").toAbsolutePath();
+        InputStream inputStream = GenerateFiles.class.getResourceAsStream("src/edu/uoregon/hms/resources/run_slurm.py");
+        Path copiedFile = Settings.getOutputPath().resolve("submit.py");
 
         try {
-            Files.copy(originalFile, copiedFile, REPLACE_EXISTING);
+            assert inputStream != null;
+            Files.copy(inputStream, copiedFile, REPLACE_EXISTING);
         } catch (IOException e) {
             System.err.format("IOException: %s%n", e);
         }

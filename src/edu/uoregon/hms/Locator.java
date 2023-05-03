@@ -3,19 +3,23 @@ package edu.uoregon.hms;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static java.net.URLDecoder.decode;
 
 /**
- * @author      Brycen Falzone <brycenf@uoregon.edu>
- * @version     0.3                 (current version number of program)
- * @since       0.1          (the version of the package this class was first added to)
+ * @author Brycen Falzone <brycenf@uoregon.edu>
+ * @version 0.3                 (current version number of program)
+ * @since 0.1          (the version of the package this class was first added to)
  */
 
 public class Locator {
-    private static String fileName = null;
+//    private static String fileName = null;
 
-    public static void main(String [] args) {
+    public static void findFile(String fileName) {
+        Path cwd = Paths.get(System.getProperty("user.dir"));
+
     }
 
     /**
@@ -40,7 +44,6 @@ public class Locator {
     }
 
     /**
-     *
      * @param fileName Name of target file in execution path dir
      * @return absolute file path
      */
@@ -57,7 +60,7 @@ public class Locator {
         if (os.contains("Windows")) { // Check if of is windows
             filePath = filePath.replace("/", "\\\\");
             if (filePath.contains("file:\\\\")) {
-                filePath= filePath.replace("file:\\\\", "");
+                filePath = filePath.replace("file:\\\\", "");
             }
         } else if (filePath.contains("file:")) {
             filePath = filePath.replace("file:", "");
@@ -70,10 +73,11 @@ public class Locator {
         return decode(path, StandardCharsets.UTF_8);
     }
 
-    public String getFileName() {
-        return fileName;
-    }
-    public static void setFileName(String fileName) {
-        Locator.fileName = fileName;
-    }
+//    public String getFileName() {
+//        return fileName;
+//    }
+
+//    public static void setFileName(String fileName) {
+//        Locator.fileName = fileName;
+//    }
 }

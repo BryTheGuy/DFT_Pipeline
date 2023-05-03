@@ -1,42 +1,111 @@
 import edu.uoregon.hms.*;
+
 import org.jetbrains.annotations.NotNull;
+
 import org.openbabel.OBMol;
 
+import org.apache.commons.cli.*;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Iterator;
 
 public class Main {
-
+    final static String VERSION = "0.1";
+    static Path OUTPUT_PATH = Paths.get("./").toAbsolutePath();
     public static void main(String @NotNull [] args) {
         System.out.println("Main running...");
         System.loadLibrary("openbabel_java");
-        // Looping through arg inputs looking for -f keyword for the file name
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].equals("-f")) {
-                if (args[i + 1] != null && !args[i + 1].isBlank()) {
-                    Locator.setFileName(args[i + 1]);
-                } else {
-                    throw new RuntimeException("Expected file after '-f' got: " + args[i + 1]);
-                }
-            }else if (args[i].equals("-v")) {
-                System.out.println("Version @version");
+
+        Options options = new Options();
+
+        Option help = new Option("h", "help", false, "Prints this message");
+        help.setRequired(false);
+        options.addOption(help);
+
+        Option fileInput = new Option("i", "input", true, "input file path");
+        fileInput.setRequired(false);
+        fileInput.setArgName("file");
+        options.addOption(fileInput);
+
+        Option outputDir = new Option("o", "output-dir", true, "output directory path (Default: Current Dir)");
+        outputDir.setRequired(false);
+        outputDir.setArgName("dir");
+        options.addOption(outputDir);
+
+        Option version = new Option("V", "version", false, "Version of program");
+        version.setRequired(false);
+        options.addOption(version);
+
+        String header = "Converts GC-MS into computational chemistry input files\n\n";
+        String footer = "Currently in development. Things my not work as expected.";
+
+        HelpFormatter formatter = new HelpFormatter();
+        CommandLineParser parser = new DefaultParser();
+
+        try {
+            CommandLine cmd = parser.parse(options, args);
+            Path inputPath = Paths.get(cmd.getOptionValue(fileInput));
+
+            if (cmd.hasOption(help)) {
+                formatter.printHelp("NAME", header, options, footer, true);
+                System.exit(0);
             }
+
+            if (cmd.hasOption(version)) {
+                System.out.printf("Version %s$n", VERSION);
+                System.exit(0);
+            }
+
+            if (!Files.exists(inputPath)) {
+                System.err.println("System path does not exist: " + inputPath);
+                System.exit(0);
+            }
+
+            if (Files.isRegularFile(inputPath) & Files.isReadable(inputPath)) {
+                Settings.setFilePath(inputPath.toRealPath());
+            } else {
+                System.err.println("File is not regular or readable: " + inputPath);
+                System.exit(0);
+            }
+
+            if (cmd.hasOption(outputDir)) {
+                Path outputPath = Paths.get(cmd.getOptionValue(outputDir)).toRealPath();
+                System.out.println("Output: " + outputPath);
+                Settings.setOutputPath(outputPath);
+
+                if (!Files.exists(outputPath) & !Files.isDirectory(outputPath)) {
+                    System.err.println("Cannot reach output directory: " + outputPath);
+                    System.exit(0);
+                }
+            }
+
+        } catch (ParseException | IOException e) {
+            System.out.println(e.getMessage());
+            formatter.printHelp("NAME", options);
+            System.exit(0);
         }
+
         setup();
         FileInterpreter.readToList();
         FileInterpreter.checkLines();
 //        FileInterpreter.checker();
-        StructureOptimizer structureOptimizer = new StructureOptimizer();
-        StructureConverter structureConverter = new StructureConverter();
+//        StructureOptimizer structureOptimizer = new StructureOptimizer();
+//        StructureConverter structureConverter = new StructureConverter();
         for (String name : Settings.getStringMoleculeNames()) {
-            String smi = NameConverter.nameToSmi(name);
-            if (smi != null) {
-                OBMol mol = structureConverter.fromSmilesToMol(smi);
-                assert mol != null;
-                System.out.println(mol);
-                OBMol molOpt = structureOptimizer.molConjugateGradient(mol);
-                String molString = structureConverter.fromMolToFormat(molOpt, "xyz");
-                System.out.println(molString);
-            }
+//            String smi = NameConverter.nameToSmi(name);
+            Molecule mol = new Molecule(name);
+            mol.defaultRun();
+//            if (smi != null) {
+//                OBMol mol = structureConverter.fromSmilesToMol(smi);
+//                assert mol != null;
+//                System.out.println(mol);
+//                OBMol molOpt = structureOptimizer.molConjugateGradient(mol);
+//                String molString = structureConverter.fromMolToFormat(molOpt, "xyz");
+//                System.out.println(molString);
+//            }
         }
     }
     private static void setup() {
