@@ -99,7 +99,7 @@ public class GenerateFiles {
 
             String fileName = molName + '-' + calcName + ".inp";
 
-            Path writePath = Settings.getOutputPath().resolve(Paths.get("molecule", molName, fileName));
+            Path writePath = Settings.getOutputPath().resolve(Paths.get(molName, fileName));
 
             conv.WriteFile(mol, String.valueOf(writePath));
 
@@ -118,7 +118,11 @@ public class GenerateFiles {
 //    }
 
     public void makeDirs(String molName) {
-        new File("./molecules", molName).mkdirs();
+        try {
+            Files.createDirectories(Settings.getOutputPath().resolve(molName));
+        } catch (IOException e) {
+            System.err.println("Failed to create directories" + e.getMessage());
+        }
     }
 
     public void makeGaussList(String fileTitle, LinkedList<String> fileNames) {
@@ -140,7 +144,7 @@ public class GenerateFiles {
         builder.append('\n');
 
         try {
-            FileWriter fw = new FileWriter(new File(Settings.getOutputPath().toString() + fileTitle, "q-tala-gauss"));
+            FileWriter fw = new FileWriter(new File(Paths.get(String.valueOf(Settings.getOutputPath()), fileTitle, "q-tala-gauss").toUri()));
             fw.write(String.valueOf(builder));
             fw.close();
         } catch (IOException e) {
@@ -149,14 +153,14 @@ public class GenerateFiles {
         }
     }
 
-    public static void pythonSubmit() {
-        InputStream inputStream = GenerateFiles.class.getResourceAsStream("src/edu/uoregon/hms/resources/run_slurm.py");
+    public static void pythonSubmit() { // FIXME: line "Files.copy(...)" requiresNonNull
+        InputStream inputStream = GenerateFiles.class.getClassLoader().getResourceAsStream("edu/uoregon/hms/resources/run_slurm.py");
         Path copiedFile = Settings.getOutputPath().resolve("submit.py");
 
         try {
             assert inputStream != null;
             Files.copy(inputStream, copiedFile, REPLACE_EXISTING);
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             System.err.format("IOException: %s%n", e);
         }
     }

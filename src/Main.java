@@ -1,4 +1,5 @@
 import edu.uoregon.hms.FileInterpreter;
+import edu.uoregon.hms.GenerateFiles;
 import edu.uoregon.hms.Settings;
 import org.apache.commons.cli.*;
 import org.jetbrains.annotations.NotNull;
@@ -70,7 +71,7 @@ public class Main {
             if (cmd.hasOption(outputDir)) {
                 Path outputPath = Paths.get(cmd.getOptionValue(outputDir)).toRealPath();
                 System.out.println("Output: " + outputPath);
-                Settings.setOutputPath(outputPath);
+                Settings.setOutputPath(outputPath + "/molecule/");
 
                 if (!Files.exists(outputPath) & !Files.isDirectory(outputPath)) {
                     System.err.println("Cannot reach output directory: " + outputPath);
@@ -91,9 +92,10 @@ public class Main {
 
         for (String name : Settings.getStringMoleculeNames()) {
 //            String smi = NameConverter.nameToSmi(name);
-            Molecule mol = new Molecule(name);
+            Molecule mol = new Molecule(name.strip());
             mol.defaultRun();
         }
+        GenerateFiles.pythonSubmit();
     }
     private static void setup() {
         Settings.setLineLengthOfInterest();

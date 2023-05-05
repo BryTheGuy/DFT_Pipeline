@@ -4,8 +4,6 @@
 from pathlib import Path
 import subprocess
 
-# cwd = os.getcwd()
-
 job_ids = []
     
 def slurm_submitter():

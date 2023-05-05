@@ -177,10 +177,10 @@ public class Molecule {
         for (String type : Settings.getCalcTypes()) {
             generateFiles.jobType(getMol(), type);
             fileNames.add(fileTitle + '-' + type);
+            genFile(type);
         }
         generateFiles.makeGaussList(fileTitle, fileNames);
 
-        copyPy();
     }
 
     public void genDirs() {
@@ -189,9 +189,6 @@ public class Molecule {
         generateFiles.makeDirs(getNoSpaceName());
     }
 
-    public void copyPy() {
-        GenerateFiles.pythonSubmit();
-    }
 
     public void defaultRun() {
         setNameNoSpace();
