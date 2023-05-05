@@ -153,7 +153,7 @@ public class GenerateFiles {
         }
     }
 
-    public static void pythonSubmit() { // FIXME: line "Files.copy(...)" requiresNonNull
+    public static void pythonSubmit() {
         InputStream inputStream = GenerateFiles.class.getClassLoader().getResourceAsStream("edu/uoregon/hms/resources/run_slurm.py");
         Path copiedFile = Settings.getOutputPath().resolve("submit.py");
 
