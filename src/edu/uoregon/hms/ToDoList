@@ -1,0 +1,20 @@
+function to create list of "peak blocks".
+eg. [           [1   3.474  0.00 C:\Database\WILEY275.L,
+                 2-Propenal (CAS) $$ Acrolein $$ NS    401 000107-02-8  4,
+                 C 8819 $$ Aqualin $$ Propenal $$ A],
+                [2   3.747  0.00 C:\Database\NIST05a.L,
+                 1,3-Pentadiene                        428 000504-60-9 90,
+                 1,3-Pentadiene, (E)-                  437 002004-70-8 90,
+                 1,4-Pentadiene                        422 000591-93-5 90],
+                [...]
+     ]
+
+feed "peak blocks" into class
+
+class
+
+peak (int):
+RT (float):
+area (float):
+candidates (List<String>):
+

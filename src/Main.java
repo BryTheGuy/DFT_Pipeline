@@ -1,4 +1,3 @@
-import edu.uoregon.hms.FileInterpreter;
 import edu.uoregon.hms.GenerateFiles;
 import edu.uoregon.hms.Settings;
 import org.apache.commons.cli.*;
@@ -86,9 +85,9 @@ public class Main {
         }
 
         setup();
-        FileInterpreter.readToList();
-        FileInterpreter.checkLines();
-//        FileInterpreter.checker();
+//        GCMSInterpreter.readToList();
+//        GCMSInterpreter.checkLines();
+//        GCMSInterpreter.checker();
 
         for (String name : Settings.getStringMoleculeNames()) {
 //            String smi = NameConverter.nameToSmi(name);
