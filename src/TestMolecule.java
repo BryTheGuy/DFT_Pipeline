@@ -49,9 +49,9 @@ public class TestMolecule {
 //        System.out.println(molecule.getCml());
 //        System.out.println("The structure in " + molecule.getFormat() + " format.");
 //        System.out.println(molecule.getStructure());
-        System.out.println("OBMol object: " + molecule.getMol());
+//        System.out.println("OBMol object: " + molecule.getMol());
 
-        molecule.defaultRun();
+//        molecule.defaultRun();
     }
     public static void main(String[] args) {
 
