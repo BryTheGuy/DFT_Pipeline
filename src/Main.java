@@ -1,5 +1,4 @@
 import edu.uoregon.hms.FileInterpreter;
-import edu.uoregon.hms.GenerateFiles;
 import edu.uoregon.hms.Settings;
 import org.apache.commons.cli.*;
 import org.jetbrains.annotations.NotNull;
@@ -12,26 +11,42 @@ import java.nio.file.Paths;
 public class Main {
     final static String VERSION = "0.1";
     static Path OUTPUT_PATH = Paths.get("./").toAbsolutePath();
-    public static void main(String @NotNull [] args) {
+    public static void main(@NotNull String[] args) {
         System.out.println("Main running...");
-        System.loadLibrary("openbabel_java");
 
         Options options = new Options();
 
+        /*
+        Add CLI options here:
+
+        Option *NAME* = new Option( *OPTION SHORT* , *OPTION LONG* , *HAS ARGUMENTS* , *DESCRIPTION* );
+        *NAME*.setRequired( 'BOOLEAN' );
+        options.addOption( *NAME* );
+         */
+
+        // Help Option
         Option help = new Option("h", "help", false, "Prints this message");
         help.setRequired(false);
         options.addOption(help);
 
+        // Check Environment Option
+        Option condaEnv = new Option(null, "check", false, "Checks if environment is setup correctly");
+        condaEnv.setRequired(false);
+        options.addOption(condaEnv);
+
+        // File Input Option
         Option fileInput = new Option("i", "input", true, "input file path");
         fileInput.setRequired(false);
         fileInput.setArgName("file");
         options.addOption(fileInput);
 
+        // Output Directory Option
         Option outputDir = new Option("o", "output-dir", true, "output directory path (Default: Current Dir)");
         outputDir.setRequired(false);
         outputDir.setArgName("dir");
         options.addOption(outputDir);
 
+        // Display Version Option
         Option version = new Option("V", "version", false, "Version of program");
         version.setRequired(false);
         options.addOption(version);
@@ -46,40 +61,39 @@ public class Main {
             CommandLine cmd = parser.parse(options, args);
             Path inputPath = Paths.get(cmd.getOptionValue(fileInput));
 
+            /*
+            Process CLI arguments here
+             */
+
+            // help
             if (cmd.hasOption(help)) {
                 formatter.printHelp("NAME", header, options, footer, true);
                 System.exit(0);
             }
 
+            // version
             if (cmd.hasOption(version)) {
                 System.out.printf("Version %s$n", VERSION);
                 System.exit(0);
             }
 
-            if (!Files.exists(inputPath)) {
-                System.err.println("System path does not exist: " + inputPath);
+            // conda environment
+            if (cmd.hasOption(condaEnv)) {
+                checkEnv();
                 System.exit(0);
             }
 
-            if (Files.isRegularFile(inputPath) & Files.isReadable(inputPath)) {
-                Settings.setFilePath(inputPath.toRealPath());
-            } else {
-                System.err.println("File is not regular or readable: " + inputPath);
-                System.exit(0);
+            // input file checking
+            if (cmd.hasOption(fileInput)) {
+                checkInputFile(Path.of(cmd.getOptionValue(fileInput)));
             }
 
+            // output directory checking
             if (cmd.hasOption(outputDir)) {
-                Path outputPath = Paths.get(cmd.getOptionValue(outputDir)).toRealPath();
-                System.out.println("Output: " + outputPath);
-                Settings.setOutputPath(outputPath + "/molecule/");
-
-                if (!Files.exists(outputPath) & !Files.isDirectory(outputPath)) {
-                    System.err.println("Cannot reach output directory: " + outputPath);
-                    System.exit(0);
-                }
+                checkOutputPath(Path.of(cmd.getOptionValue(outputDir)));
             }
 
-        } catch (ParseException | IOException e) {
+        } catch (ParseException e) {
             System.out.println(e.getMessage());
             formatter.printHelp("NAME", options);
             System.exit(0);
@@ -93,14 +107,56 @@ public class Main {
         for (String name : Settings.getStringMoleculeNames()) {
 //            String smi = NameConverter.nameToSmi(name);
             Molecule mol = new Molecule(name.strip());
-            mol.defaultRun();
+//            mol.defaultRun();
         }
-        GenerateFiles.pythonSubmit();
+//        GenerateFiles.pythonSubmit();
     }
     private static void setup() {
         Settings.setLineLengthOfInterest();
         Settings.setTextBlockEnds();
         Settings.setWhiteTillText();
         Settings.setLinesInFileHeader();
+    }
+
+    private static void checkEnv() {
+        Path condaPrefix = Path.of(System.getenv("CONDA_PREFIX"));
+        //TODO: Check if using 'base' conda environment
+        Path condaEnvName = condaPrefix.getFileName();
+        System.out.printf("Found conda environment: %s", condaEnvName);
+        Path obabelFile = condaPrefix.resolve("bin/obabel");
+        boolean isObabelExecutable = Files.isRegularFile(obabelFile) & Files.isReadable(obabelFile) & Files.isExecutable(obabelFile);
+        System.out.printf("Found obabel executable: %s", isObabelExecutable);
+        if (!isObabelExecutable) {
+            System.err.println("It is recommended to install openbabel in conda with 'conda install -c conda-forge openbabel' in a separate environment.");
+        }
+    }
+
+    private static void checkInputFile(Path inputPath) {
+        if (!Files.exists(inputPath)) {
+            System.err.println("System path does not exist: " + inputPath);
+            System.exit(0);
+        }
+
+        if (Files.isRegularFile(inputPath) & Files.isReadable(inputPath)) {
+            try {
+                Settings.setFilePath(inputPath.toRealPath());
+            } catch (IOException e) {
+                System.err.println();
+            }
+        } else {
+            System.err.println("File is not regular or readable: " + inputPath);
+            System.exit(0);
+        }
+    }
+
+    private static void checkOutputPath(Path outputPath) {
+        System.out.println("Output: " + outputPath);
+        Settings.setOutputPath(outputPath + "/molecule/");
+
+        if (!Files.exists(outputPath) & !Files.isDirectory(outputPath)) {
+            System.err.println("Cannot reach output directory: " + outputPath);
+            System.exit(0);
+        }
+
     }
 }
