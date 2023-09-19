@@ -133,7 +133,7 @@ public class Main {
 
     private static void checkInputFile(Path inputPath) {
         if (!Files.exists(inputPath)) {
-            System.err.println("System path does not exist: " + inputPath);
+            System.err.printf("The system path %s does not exist", inputPath);
             System.exit(0);
         }
 
@@ -144,19 +144,17 @@ public class Main {
                 System.err.println();
             }
         } else {
-            System.err.println("File is not regular or readable: " + inputPath);
+            System.err.printf("%s is not regular or readable", inputPath);
             System.exit(0);
         }
     }
 
     private static void checkOutputPath(Path outputPath) {
-        System.out.println("Output: " + outputPath);
-        Settings.setOutputPath(outputPath + "/molecule/");
-
         if (!Files.exists(outputPath) & !Files.isDirectory(outputPath)) {
-            System.err.println("Cannot reach output directory: " + outputPath);
+            System.err.printf("Cannot reach output directory %s", outputPath);
             System.exit(0);
         }
-
+        System.out.println("Output: " + outputPath);
+        Settings.setOutputPath(outputPath + "/molecule/");
     }
 }
