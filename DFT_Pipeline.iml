@@ -18,7 +18,6 @@
     </orderEntry>
     <orderEntry type="library" name="uk.ac.cam.ch.opsin.core" level="project" />
     <orderEntry type="library" name="apache.logging.log4j.core" level="project" />
-    <orderEntry type="library" name="commons.cli" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
@@ -28,5 +27,17 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/annotations/24.0.0/annotations-24.0.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="commons.cli1" level="project" />
+    <orderEntry type="library" name="commons.cli" level="project" />
+    <orderEntry type="library" name="apache.commons.exec" level="project" />
   </component>
 </module>
